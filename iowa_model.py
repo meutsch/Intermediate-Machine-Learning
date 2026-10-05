@@ -18,7 +18,7 @@ def score_model(model, X_t, X_v, y_t, y_v):
     y_v: the validation data y-values
 
     Returns:
-    mean_absolute_error: the mean absolute error for the produced model
+    mean_absolute_error(): the mean absolute error for the model
     """
     model.fit(X_t, y_t)
     preds = model.predict(X_v)
@@ -40,23 +40,27 @@ X_train, X_valid, y_train, y_valid = train_test_split(X, y, train_size=0.8,
                                                       test_size=0.2,
                                                       random_state=0)
 
-# Print first few rows of data
-print(X_train.head())
+# # Print first few rows of data
+# print(X_train.head())
 
-# Define models with different parameters to determine best one
-model_1 = RandomForestRegressor(n_estimators=50, random_state=0)
-model_2 = RandomForestRegressor(n_estimators=100, random_state=0)
-model_3 = RandomForestRegressor(n_estimators=100, criterion='absolute_error', 
-                                random_state=0)
-model_4 = RandomForestRegressor(n_estimators=200, min_samples_split=20, 
-                                random_state=0)
-model_5 = RandomForestRegressor(n_estimators=100, max_depth=7, random_state=0)
-models = [model_1, model_2, model_3, model_4, model_5]
+""" Comparing Model Parameters """
 
-# Print the mean absolute error of the models above
-for i in range(0, len(models)):
-    mae = score_model(models[i], X_train, X_valid, y_train, y_valid)
-    print("Model %d MAE: %d" % (i+1, mae))
+# # Define models with different parameters to determine best one
+# model_1 = RandomForestRegressor(n_estimators=50, random_state=0)
+# model_2 = RandomForestRegressor(n_estimators=100, random_state=0)
+# model_3 = RandomForestRegressor(n_estimators=100, criterion='absolute_error', 
+#                                 random_state=0)
+# model_4 = RandomForestRegressor(n_estimators=200, min_samples_split=20, 
+#                                 random_state=0)
+# model_5 = RandomForestRegressor(n_estimators=100, max_depth=7, random_state=0)
+# models = [model_1, model_2, model_3, model_4, model_5]
+
+# # Print the mean absolute error of the models above
+# for i in range(0, len(models)):
+#     mae = score_model(models[i], X_train, X_valid, y_train, y_valid)
+#     print("Model %d MAE: %d" % (i+1, mae))
+
+""" Building a Simple Model """
 
 # Build a new random forest regressor w/o specifying most parameters for now
 # default: n_estimators=100, criterion='squared_error', max_depth=None
@@ -73,3 +77,6 @@ preds_test = my_model.predict(X_test)
 output = pd.DataFrame({'Id': X_test.index,
                        'SalePrice': preds_test})
 output.to_csv('submission.csv', index=False)
+
+# Calculate and print MAE of new model
+print("My Model: ", score_model(my_model, X_train, X_valid, y_train, y_valid))
